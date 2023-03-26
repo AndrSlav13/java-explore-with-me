@@ -43,7 +43,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     @Override
     public List<StatDTO.ReturnStatDTO> getRecords(Long userId, String start, String end, List<String> urls, String unique, Integer from, Integer size) {
         boolean flag = Boolean.parseBoolean(unique);
-        if(flag) return statisticsStore.findStatisticsUniqueIp(
+        if (flag) return statisticsStore.findStatisticsUniqueIp(
                 urls.stream().collect(Collectors.joining("%")),
                 LocalDateTime.parse(start, StatDTO.formatDateTime),
                 LocalDateTime.parse(end, StatDTO.formatDateTime)
