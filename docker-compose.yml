@@ -5,7 +5,7 @@ services:
     image: stats-client
     container_name: stats-client-container
     ports:
-      - "9090:9090"
+      - "8888:8888"
     restart: on-failure
     depends_on:
       - stats-db
@@ -17,7 +17,7 @@ services:
     image: stats-server
     container_name: stats-server-container
     ports:
-      - "8888:8888"
+      - "9090:9090"
     restart: on-failure
     depends_on:
       - stats-db

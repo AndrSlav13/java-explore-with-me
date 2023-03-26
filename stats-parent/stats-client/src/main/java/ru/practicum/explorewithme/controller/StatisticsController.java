@@ -23,8 +23,7 @@ public class StatisticsController {
     @PostMapping("/hit")
     public ResponseEntity<Object> addRecord(@RequestBody @Valid StatDTO.NewStatDTO statDTO,
                                             @Nullable @RequestHeader("X-Explorer-User-Id") Long userId) {
-        throw new RuntimeException("something");
-        //return statisticsClient.addRecord(userId, statDTO);
+        return statisticsClient.addRecord(userId, statDTO);
     }
 
     @GetMapping(path = "/stats")
