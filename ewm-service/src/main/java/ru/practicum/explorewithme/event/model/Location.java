@@ -2,6 +2,8 @@ package ru.practicum.explorewithme.event.model;
 
 import ru.practicum.explorewithme.event.dto.LocationDTO;
 
+import java.util.Objects;
+
 import static java.lang.Math.abs;
 
 public class Location {
@@ -37,6 +39,6 @@ public class Location {
 
     @Override
     public int hashCode() {
-        return this.hashCode();
+        return Objects.hash(lat, lon);
     }
 }

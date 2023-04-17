@@ -119,7 +119,7 @@ public class EventServiceImpl implements EventService {
             throw new ApiErrorException(409, "event moderation is rejected", "the event is published");
 
         if (eventDto.getAnnotation() != null) event.setAnnotation(eventDto.getAnnotation());
-        if (eventDto.getCategory() != null && eventDto.getCategory() != event.getCategory().getId())
+        if (eventDto.getCategory() != null && !eventDto.getCategory().equals(event.getCategory().getId()))
             event.setCategory(categoryService.findCategoryById(eventDto.getCategory()));
         if (eventDto.getDescription() != null) event.setDescription(eventDto.getDescription());
         if (eventDto.getEventDate() != null) {
@@ -170,7 +170,7 @@ public class EventServiceImpl implements EventService {
         Event event = findEventById(eventId);
 
         if (eventDto.getAnnotation() != null) event.setAnnotation(eventDto.getAnnotation());
-        if (eventDto.getCategory() != null && eventDto.getCategory() != event.getCategory().getId())
+        if (eventDto.getCategory() != null && !eventDto.getCategory().equals(event.getCategory().getId()))
             event.setCategory(categoryService.findCategoryById(eventDto.getCategory()));
         if (eventDto.getDescription() != null) event.setDescription(eventDto.getDescription());
         if (eventDto.getEventDate() != null) {

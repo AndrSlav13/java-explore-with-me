@@ -10,7 +10,6 @@ import ru.practicum.explorewithme.event.model.Event;
 import ru.practicum.explorewithme.user.model.User;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -23,7 +22,7 @@ import java.util.Objects;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "requests", schema = "public", uniqueConstraints = {@UniqueConstraint(name = "ComplexKeyConstraint", columnNames = {"eventId", "requesterId"})})
-public class Request implements Serializable {
+public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
@@ -31,8 +30,6 @@ public class Request implements Serializable {
 
     public Request() {
     }
-
-    ;
 
     public Request(Event event, User requester) {
         this.event = event;
