@@ -9,6 +9,7 @@ import ru.practicum.explorewithme.statistics.storage.StatisticsRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,35 +25,47 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Transactional
     @Override
-    public StatDTO.NewStatDTO addRecord(StatDTO.NewStatDTO statDTO, Long userId) {
-        Statistics stat = Statistics.builder()
-                .id(null)
-                .app(statDTO.getApp())
-                .uri(statDTO.getUri())
-                .ip(statDTO.getIp())
-                .timestamp(LocalDateTime.parse(statDTO.getTimestamp(), StatDTO.formatDateTime))
-                .build();
+    //Возвращается только первый DTO - он пришел на внешний endpoint. Остальные если есть, то в процессе его разворачивания
+    public StatDTO.NewStatDTO addRecord(List<StatDTO.NewStatDTO> statDTO, Long userId) {
+        List<Statistics> stat = statDTO.stream().map(a ->
+                Statistics.builder()
+                        .id(null)
+                        .app(a.getApp())
+                        .uri(a.getUri().toLowerCase())
+                        .ip(a.getIp())
+                        .timestamp(LocalDateTime.parse(a.getTimestamp(), StatDTO.formatDateTime))
+                        .build()).collect(Collectors.toList());
 
-        statisticsStore.save(stat);
-        return statDTO.toBuilder()
-                .timestamp(stat.getTimestamp().format(StatDTO.formatDateTime))
-                .id(stat.getId())
+        statisticsStore.saveAll(stat);
+        return statDTO.get(0).toBuilder()
+                .timestamp(stat.get(0).getTimestamp().format(StatDTO.formatDateTime))
+                .id(stat.get(0).getId())
                 .build();
     }
 
     @Override
     public List<StatDTO.ReturnStatDTO> getRecords(Long userId, String start, String end, List<String> urls, String unique, Integer from, Integer size) {
         boolean flag = Boolean.parseBoolean(unique);
-        if (flag) return statisticsStore.findStatisticsUniqueIp(
-                urls.stream().collect(Collectors.joining("%")),
-                LocalDateTime.parse(start, StatDTO.formatDateTime),
-                LocalDateTime.parse(end, StatDTO.formatDateTime)
-        );
+        List<StatDTO.ReturnStatDTO> rezult = null;
 
-        return statisticsStore.findStatisticsNotUniqueIp(
-                urls.stream().collect(Collectors.joining("%")),
+        if (flag) rezult = statisticsStore.findStatisticsUniqueIp(
+                urls,
                 LocalDateTime.parse(start, StatDTO.formatDateTime),
                 LocalDateTime.parse(end, StatDTO.formatDateTime)
         );
+        else
+            rezult = statisticsStore.findStatisticsNotUniqueIp(
+                    urls,
+                    LocalDateTime.parse(start, StatDTO.formatDateTime),
+                    LocalDateTime.parse(end, StatDTO.formatDateTime)
+            );
+
+
+        Map<String, StatDTO.ReturnStatDTO> map = rezult.stream().collect(Collectors.toMap(a -> a.getUri(), a -> a, (a, b) -> a));
+        if (!urls.isEmpty()) rezult = urls.stream().collect(Collectors.toMap(a -> a, a -> map.get(a) == null ?
+                        StatDTO.ReturnStatDTO.builder().uri(a).hits(0L).build() :
+                        map.get(a), (a, b) -> a))
+                .values().stream().sorted((a, b) -> a.getHits() < b.getHits() ? 1 : -1).collect(Collectors.toList());
+        return rezult;
     }
 }

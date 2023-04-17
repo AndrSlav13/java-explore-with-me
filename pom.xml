@@ -5,6 +5,7 @@
     <modules>
         <module>stats-parent</module>
         <module>ewm-service</module>
+        <module>stats-parent/gateway</module>
     </modules>
 
     <parent>

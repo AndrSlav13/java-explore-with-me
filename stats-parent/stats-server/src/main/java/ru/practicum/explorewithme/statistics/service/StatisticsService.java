@@ -8,7 +8,7 @@ import ru.practicum.explorewithme.statistics.model.Statistics;
 import java.util.List;
 
 public interface StatisticsService extends StatisticsServiceSort {
-    StatDTO.NewStatDTO addRecord(StatDTO.NewStatDTO statDTO, Long userId);
+    StatDTO.NewStatDTO addRecord(List<StatDTO.NewStatDTO> statDTO, Long userId);
 
     List<StatDTO.ReturnStatDTO> getRecords(Long userId, String start, String end, List<String> urls, String unique, Integer from, Integer size);
 
