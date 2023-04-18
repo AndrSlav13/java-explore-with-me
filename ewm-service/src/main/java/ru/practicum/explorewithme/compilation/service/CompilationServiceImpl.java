@@ -72,7 +72,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public CompilationDTO.Controller.CompilationDto save(CompilationDTO.Controller.NewCompilationDto compDto) {
         Compilation comp = Compilation.builder()
-                .pinned(compDto.getPinned())
+                .pinned(compDto.isPinned())
                 .title(compDto.getTitle())
                 .id(null)
                 .build();
