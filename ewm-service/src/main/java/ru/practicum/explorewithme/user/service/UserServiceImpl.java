@@ -10,10 +10,12 @@ import ru.practicum.explorewithme.event.model.Event;
 import ru.practicum.explorewithme.event.repository.EventRepository;
 import ru.practicum.explorewithme.exceptions.ApiErrorException;
 import ru.practicum.explorewithme.request.dto.RequestDTO;
+import ru.practicum.explorewithme.request.dto.RequestMapper;
 import ru.practicum.explorewithme.request.model.Request;
 import ru.practicum.explorewithme.request.model.StatusEventParticipation;
 import ru.practicum.explorewithme.request.repository.RequestRepository;
 import ru.practicum.explorewithme.user.dto.UserDTO;
+import ru.practicum.explorewithme.user.dto.UserMapper;
 import ru.practicum.explorewithme.user.model.User;
 import ru.practicum.explorewithme.user.repository.UserRepository;
 
@@ -39,7 +41,7 @@ public class UserServiceImpl implements UserService {
     public List<UserDTO.Controller.UserDto> findUsersByIdInDTOFULL(List<Long> ids, int from, int size) {
         Pageable pg = PageRequest.of(from, size);
         return userRepository.findUsersByIdIn(ids, pg).stream()
-                .map(a -> UserDTO.Controller.Mapper.toUserDtoRequest(a))
+                .map(a -> UserMapper.toUserDtoRequest(a))
                 .collect(Collectors.toList());
     }
 
@@ -61,8 +63,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserDTO.Controller.UserDto save(UserDTO.Controller.NewUserRequest userDTO) {
-        User usr = userRepository.save(UserDTO.Controller.Mapper.toUser(userDTO).toBuilder().id(null).build());
-        return UserDTO.Controller.Mapper.toUserDtoRequest(usr);
+        User usr = userRepository.save(UserMapper.toUser(userDTO).toBuilder().id(null).build());
+        return UserMapper.toUserDtoRequest(usr);
     }
 
     @Transactional
@@ -79,7 +81,7 @@ public class UserServiceImpl implements UserService {
         Request request = new Request(event, user);
         if (!reuestModeration) request.setStatus(StatusEventParticipation.CONFIRMED);
         requestRepository.save(request);
-        return RequestDTO.Controller.Mapper.toParticipationRequestDto(request);
+        return RequestMapper.toParticipationRequestDto(request);
         //return userRepository.save(userId, eventId);
     }
 }

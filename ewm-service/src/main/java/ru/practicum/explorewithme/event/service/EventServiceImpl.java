@@ -15,6 +15,7 @@ import ru.practicum.explorewithme.category.service.CategoryService;
 import ru.practicum.explorewithme.client.StatisticsClient;
 import ru.practicum.explorewithme.dto.StatDTO;
 import ru.practicum.explorewithme.event.dto.EventDTO;
+import ru.practicum.explorewithme.event.dto.EventMapper;
 import ru.practicum.explorewithme.event.model.Event;
 import ru.practicum.explorewithme.event.model.Sort;
 import ru.practicum.explorewithme.event.model.StateActionEvent;
@@ -60,7 +61,7 @@ public class EventServiceImpl implements EventService {
     public EventDTO.Controller.EventFullDto findEventByIdDTOFull(Long id) {
         Event event = findEventById(id);
         EventDTO.Controller.EventShortDto eDto = findEventsByIdInDTO(List.of(id)).get(0);
-        return EventDTO.Controller.Mapper.toEventFullDto(eDto, event);
+        return EventMapper.toEventFullDto(eDto, event);
     }
 
     @Override
@@ -83,7 +84,7 @@ public class EventServiceImpl implements EventService {
                 () -> new ApiErrorException(404, "Event not found", "Event id=" + id + " is absent")
         );
         EventDTO.Controller.EventShortDto eventShortDto = getShortEventsDTO(List.of(event), Sort.EVENT_DATE.toString()).get(0);
-        return EventDTO.Controller.Mapper.toEventFullDto(eventShortDto, event);
+        return EventMapper.toEventFullDto(eventShortDto, event);
     }
 
     public Event findEventByInitiatorIdAndId(Long userId, Long id) {
@@ -100,7 +101,7 @@ public class EventServiceImpl implements EventService {
             throw new ApiErrorException(409, "event is rejected", "the event has already happened");
         Category category = categoryService.findCategoryById(eventDto.getCategory());
         User user = userService.findUserById(userId);
-        Event event = EventDTO.Controller.Mapper.toEvent(eventDto);
+        Event event = EventMapper.toEvent(eventDto);
         event.setCategory(category);
         user.addEventInited(event);
         eventRepository.save(event);
@@ -160,7 +161,7 @@ public class EventServiceImpl implements EventService {
                 rangeStart == null ? null : LocalDateTime.parse(rangeStart, StatDTO.formatDateTime), rangeEnd == null ? null : LocalDateTime.parse(rangeEnd, StatDTO.formatDateTime), pg);
         Map<Long, Event> mapEvent = events.stream().collect(Collectors.toMap(a -> a.getId(), a -> a, (a, b) -> a));
         List<EventDTO.Controller.EventShortDto> eventsDto = getShortEventsDTO(events, Sort.EVENT_DATE.toString());
-        return eventsDto.stream().map(a -> EventDTO.Controller.Mapper.toEventFullDto(a, mapEvent.get(a.getId()))).collect(Collectors.toList());
+        return eventsDto.stream().map(a -> EventMapper.toEventFullDto(a, mapEvent.get(a.getId()))).collect(Collectors.toList());
     }
 
     @Transactional
@@ -262,7 +263,7 @@ public class EventServiceImpl implements EventService {
 
 
         return events.stream().map(a ->
-                EventDTO.Controller.Mapper.toEventShortDto(
+                EventMapper.toEventShortDto(
                         a, mapCategory.get(a.getCategory().getId()),
                         mapNumConfirmed.get(a.getId()) == null ? 0 : mapNumConfirmed.get(a.getId()),
                         mapInitiator.get(a.getInitiator().getId()),

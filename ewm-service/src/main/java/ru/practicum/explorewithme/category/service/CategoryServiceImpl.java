@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.category.dto.CategoryDTO;
+import ru.practicum.explorewithme.category.dto.CategoryMapper;
 import ru.practicum.explorewithme.category.model.Category;
 import ru.practicum.explorewithme.category.repository.CategoryRepository;
 import ru.practicum.explorewithme.exceptions.ApiErrorException;
@@ -29,7 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryDTO.Controller.CategoryDto> findCategories(int from, int size) {
         Pageable pg = PageRequest.of(from, size);
-        return categoryRepository.findAll(pg).getContent().stream().map(a -> CategoryDTO.Controller.Mapper.toCategoryDto(a)).collect(Collectors.toList());
+        return categoryRepository.findAll(pg).getContent().stream().map(a -> CategoryMapper.toCategoryDto(a)).collect(Collectors.toList());
     }
 
     @Override
@@ -54,7 +55,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDTO.Controller.CategoryDto save(CategoryDTO.Controller.NewCategoryDto categoryDTO) {
         Category category = categoryRepository.save(Category.builder().id(null).name(categoryDTO.getName()).build());
-        return CategoryDTO.Controller.Mapper.toCategoryDto(category);
+        return CategoryMapper.toCategoryDto(category);
     }
 
     @Transactional
@@ -77,7 +78,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDTO.Controller.CategoryDto patchCategoryById(CategoryDTO.Controller.NewCategoryDto categoryDTO, Long id) {
         Category category = findCategoryById(id);
         if (categoryDTO != null && categoryDTO.getName() != null) category.setName(categoryDTO.getName());
-        return CategoryDTO.Controller.Mapper.toCategoryDto(category);
+        return CategoryMapper.toCategoryDto(category);
     }
 
     @Override

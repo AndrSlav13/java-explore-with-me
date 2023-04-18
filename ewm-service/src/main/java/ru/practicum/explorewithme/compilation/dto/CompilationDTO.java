@@ -11,13 +11,13 @@ import java.util.List;
 public enum CompilationDTO {
     ;
 
-    private interface Title {
+    private interface TitleI {
         @NotNull
         @NotBlank
         String getTitle();
     }
 
-    private interface Events {
+    private interface EventsI {
         @NotNull
         List<Long> getEvents();
     }
@@ -36,7 +36,7 @@ public enum CompilationDTO {
 
         @Data
         @Builder
-        public static class NewCompilationDto implements Title, Events {
+        public static class NewCompilationDto implements TitleI, EventsI {
             private Boolean pinned;
             private String title;
             private List<Long> events;

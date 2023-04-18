@@ -14,12 +14,15 @@ import ru.practicum.explorewithme.event.dto.constraints.DateConstrain;
 import ru.practicum.explorewithme.event.dto.constraints.EnumStateActionEventConstrain;
 import ru.practicum.explorewithme.event.dto.constraints.EnumStateEventConstrain;
 import ru.practicum.explorewithme.event.dto.constraints.LocationConstrain;
-import ru.practicum.explorewithme.event.model.*;
+import ru.practicum.explorewithme.event.model.Location;
+import ru.practicum.explorewithme.event.model.Sort;
+import ru.practicum.explorewithme.event.model.StateActionEvent;
 import ru.practicum.explorewithme.exceptions.WrongEnumStatusException;
 import ru.practicum.explorewithme.request.dto.EnumStatusEventConstrain;
 import ru.practicum.explorewithme.user.dto.UserDTO;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
 
 public enum EventDTO {
@@ -60,8 +63,8 @@ public enum EventDTO {
     }
 
     private interface ParticipantLimitI {
-        @Nullable
-        Long getParticipantLimit();
+        @PositiveOrZero
+        Integer getParticipantLimit();
     }
 
     private interface RequestModerationI {
@@ -163,15 +166,15 @@ public enum EventDTO {
 
         @Data
         @Builder
-        public static class NewEventDto implements AnnotationI, CategoryI, DescriptionI, EventDateI {
+        public static class NewEventDto implements AnnotationI, CategoryI, DescriptionI, EventDateI, ParticipantLimitI {
             private String annotation;
             private Long category;
             private String description;
             private String eventDate;   //"yyyy-MM-dd HH:mm:ss"
             private Location location;  //координаты
-            private Boolean paid;   //платное ли участие
+            private boolean paid;   //платное ли участие
             private Integer participantLimit;
-            private Boolean requestModeration;  //нужна ли модерация
+            private boolean requestModeration;  //нужна ли модерация
             private String title;
         }
 
@@ -228,92 +231,6 @@ public enum EventDTO {
                         location, paid, participantLimit, requestModeration,
                         stateAction, title);
             }
-        }
-
-        public static class Mapper {
-            public static EventShortDto toEventShortDto(Event event, CategoryDTO.Controller.CategoryDto categoryDto,
-                                                        Long numConfirmedRequests,
-                                                        UserDTO.Controller.UserShortDto initiatorDto,
-                                                        Long numViews) {
-                EventShortDto item = EventShortDto.builder()
-                        .id(event.getId())
-                        .annotation(event.getAnnotation())
-                        .confirmedRequests(numConfirmedRequests)
-                        .eventDate(event.getEventDate().format(StatDTO.formatDateTime))
-                        .category(categoryDto)
-                        .initiator(initiatorDto)
-                        .paid(event.getPaid())
-                        .title(event.getTitle())
-                        .views(numViews)
-                        .build();
-
-                return item;
-            }
-
-            public static EventFullDto toEventFullDto(EventShortDto event, Event e) {
-                EventFullDto item = EventFullDto.builder()
-                        .id(event.id)
-                        .annotation(event.annotation)
-                        .category(event.category)
-                        .confirmedRequests(event.confirmedRequests)
-                        .createdOn(e.getCreatedOn().format(StatDTO.formatDateTime))
-                        .description(e.getDescription())
-                        .eventDate(event.eventDate)
-                        .initiator(event.initiator)
-                        .location(Location.toLocation(e.getLocation()))
-                        .paid(event.paid)
-                        .participantLimit(e.getParticipantLimit())
-                        .publishedOn(e.getState() == StateEvent.PUBLISHED ? e.getPublishedOn().format(StatDTO.formatDateTime) : null)
-                        .requestModeration(e.getRequestModeration())
-                        .state(e.getState().toString())
-                        .title(event.title)
-                        .views(event.views)
-                        .build();
-
-                return item;
-            }
-
-            public static Event toEvent(NewEventDto eventDTO) {
-                Event item = Event.builder()
-                        .id(null)
-                        .annotation(eventDTO.annotation)
-                        .eventDate(LocalDateTime.parse(eventDTO.eventDate, StatDTO.formatDateTime))
-                        .paid(eventDTO.paid)
-                        .title(eventDTO.title)
-                        .description(eventDTO.description)
-                        .createdOn(LocalDateTime.parse(eventDTO.eventDate, StatDTO.formatDateTime))
-                        .state(StateEvent.PENDING)
-                        .location(eventDTO.location.toString()) //Не jpa, поэтому String
-                        .participantLimit(eventDTO.participantLimit)
-                        .requestModeration(eventDTO.requestModeration)
-                        .build();
-
-                return item;
-            }
-
-            public static EventDTO.Controller.EventFullDto toEventFullDto(Event event, CategoryDTO.Controller.CategoryDto categoryDto,
-                                                                          Long numConfirmedRequests,
-                                                                          UserDTO.Controller.UserShortDto initiatorDto,
-                                                                          Long numViews) {
-                return EventDTO.Controller.EventFullDto.builder()
-                        .id(event.getId())
-                        .annotation(event.getAnnotation())
-                        .category(categoryDto)
-                        .confirmedRequests(numConfirmedRequests)
-                        .createdOn(event.getCreatedOn().format(StatDTO.formatDateTime))
-                        .description(event.getDescription())
-                        .eventDate(event.getEventDate().format(StatDTO.formatDateTime))
-                        .initiator(initiatorDto)
-                        .location(Location.toLocation(event.getLocation()))
-                        .paid(event.getPaid())
-                        .participantLimit(event.getParticipantLimit())
-                        .publishedOn(event.getPublishedOn().format(StatDTO.formatDateTime))
-                        .requestModeration(event.getRequestModeration())
-                        .title(event.getTitle())
-                        .views(numViews)
-                        .build();
-            }
-
         }
 
     }

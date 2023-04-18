@@ -12,6 +12,7 @@ import ru.practicum.explorewithme.event.model.StateEvent;
 import ru.practicum.explorewithme.event.service.EventService;
 import ru.practicum.explorewithme.exceptions.ApiErrorException;
 import ru.practicum.explorewithme.request.dto.RequestDTO;
+import ru.practicum.explorewithme.request.dto.RequestMapper;
 import ru.practicum.explorewithme.request.model.Request;
 import ru.practicum.explorewithme.request.model.StatusEventParticipation;
 import ru.practicum.explorewithme.request.repository.RequestRepository;
@@ -51,7 +52,7 @@ public class RequestServiceImpl implements RequestService {
     public List<RequestDTO.Controller.ParticipationRequestDto> findRequestsByUserId(Long userId, Integer from, Integer size) {
         Pageable pg = PageRequest.of(from, size);
         List<Request> requests = requestRepository.findAllByRequesterId(userId, pg);
-        return requests.stream().map(a -> RequestDTO.Controller.Mapper.toParticipationRequestDto(a)).collect(Collectors.toList());
+        return requests.stream().map(a -> RequestMapper.toParticipationRequestDto(a)).collect(Collectors.toList());
     }
 
     @Transactional
@@ -73,7 +74,7 @@ public class RequestServiceImpl implements RequestService {
     public List<RequestDTO.Controller.ParticipationRequestDto> findRequestsForEventOfUser(Long userId, Long eventId) {
         eventService.findEventByInitiatorIdAndIdDTOFull(userId, eventId);  //Проверка наличия и возможности доступа
         List<Request> requests = requestRepository.findAllByEventId(eventId);
-        return requests.stream().map(a -> RequestDTO.Controller.Mapper.toParticipationRequestDto(a)).collect(Collectors.toList());
+        return requests.stream().map(a -> RequestMapper.toParticipationRequestDto(a)).collect(Collectors.toList());
     }
 
 
@@ -119,8 +120,8 @@ public class RequestServiceImpl implements RequestService {
         List<RequestDTO.Controller.ParticipationRequestDto> rejectedRequests = new ArrayList<>();
         requests.stream().forEach(a -> {
             if (a.getStatus() == StatusEventParticipation.CONFIRMED)
-                confirmedRequests.add(RequestDTO.Controller.Mapper.toParticipationRequestDto(a));
-            else rejectedRequests.add(RequestDTO.Controller.Mapper.toParticipationRequestDto(a));
+                confirmedRequests.add(RequestMapper.toParticipationRequestDto(a));
+            else rejectedRequests.add(RequestMapper.toParticipationRequestDto(a));
         });
         return RequestDTO.Controller.EventRequestStatusUpdateResult.builder()
                 .confirmedRequests(confirmedRequests)
@@ -135,6 +136,6 @@ public class RequestServiceImpl implements RequestService {
         if (!request.getRequester().getId().equals(userId))
             throw new ApiErrorException(404, "wrong user authentication", "forbidden request id=" + requestId + " modification");
         request.setStatus(StatusEventParticipation.CANCELED);
-        return RequestDTO.Controller.Mapper.toParticipationRequestDto(request);
+        return RequestMapper.toParticipationRequestDto(request);
     }
 }

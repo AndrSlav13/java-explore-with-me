@@ -7,7 +7,7 @@ import ru.practicum.explorewithme.user.model.User;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Long>, UserRepositoryCriteria {
+public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findUsersByIdIn(List<Long> ids, Pageable pg);
 
     List<User> findUsersByIdIn(List<Long> ids);

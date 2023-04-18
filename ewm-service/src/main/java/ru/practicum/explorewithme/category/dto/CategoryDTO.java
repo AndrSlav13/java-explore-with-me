@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.explorewithme.category.model.Category;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -12,7 +11,7 @@ import javax.validation.constraints.NotNull;
 public enum CategoryDTO {
     ;
 
-    private interface Name {
+    private interface NameI {
         @NotNull
         @NotBlank
         String getName();
@@ -32,29 +31,8 @@ public enum CategoryDTO {
         @Data
         @NoArgsConstructor
         @AllArgsConstructor
-        public static class NewCategoryDto implements Name {
+        public static class NewCategoryDto implements NameI {
             String name;
-        }
-
-        public static class Mapper {
-            public static CategoryDto toCategoryDto(Category category) {
-                CategoryDto item = CategoryDto.builder()
-                        .name(category.getName())
-                        .id(category.getId())
-                        .build();
-
-                return item;
-            }
-
-            public static Category toCategory(NewCategoryDto categoryDto) {
-                Category item = Category.builder()
-                        .id(null)
-                        .name(categoryDto.getName())
-                        .build();
-
-                return item;
-            }
-
         }
 
     }

@@ -9,8 +9,8 @@ import ru.practicum.explorewithme.user.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Builder(toBuilder = true)
 @Getter
@@ -65,7 +65,7 @@ public class Event {
     @OneToMany(mappedBy = "event",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
-    List<Request> requesters = new ArrayList<>();
+    Set<Request> requesters = new HashSet<>();
 
     @Builder.Default
     @ToString.Exclude
@@ -78,7 +78,7 @@ public class Event {
             joinColumns = @JoinColumn(name = "event_id"),
             inverseJoinColumns = @JoinColumn(name = "compilation_id")
     )
-    List<Compilation> compilations = new ArrayList<>();
+    Set<Compilation> compilations = new HashSet<>();
 
     public void setCategory(Category category) {
         if (category != null) category.removeEvent(this);

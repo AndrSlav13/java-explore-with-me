@@ -5,8 +5,8 @@ import lombok.experimental.FieldDefaults;
 import ru.practicum.explorewithme.event.model.Event;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Builder(toBuilder = true)
 @Getter
@@ -28,7 +28,7 @@ public class Category {
     @Builder.Default
     @ToString.Exclude
     @OneToMany(mappedBy = "category")
-    List<Event> events = new ArrayList<>();
+    Set<Event> events = new HashSet<>();
 
     public void addEvent(Event event) {
         events.add(event);

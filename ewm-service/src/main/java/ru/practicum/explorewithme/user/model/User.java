@@ -6,8 +6,8 @@ import ru.practicum.explorewithme.event.model.Event;
 import ru.practicum.explorewithme.request.model.Request;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Builder(toBuilder = true)
 @Getter
@@ -33,14 +33,14 @@ public class User {
     @OneToMany(mappedBy = "initiator",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
-    List<Event> eventsInited = new ArrayList<>();
+    Set<Event> eventsInited = new HashSet<>();
 
     @Builder.Default
     @ToString.Exclude
     @OneToMany(mappedBy = "requester",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
-    List<Request> eventsRequested = new ArrayList<>();
+    Set<Request> eventsRequested = new HashSet<>();
 
     public Event addEventInited(Event event) {
         event.setInitiator(this);

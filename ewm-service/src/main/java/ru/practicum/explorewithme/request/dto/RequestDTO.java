@@ -3,7 +3,6 @@ package ru.practicum.explorewithme.request.dto;
 import io.micrometer.core.lang.Nullable;
 import lombok.Builder;
 import lombok.Data;
-import ru.practicum.explorewithme.request.model.Request;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,20 +42,6 @@ public enum RequestDTO {
         public static class EventRequestStatusUpdateResult {
             private List<RequestDTO.Controller.ParticipationRequestDto> confirmedRequests;
             private List<RequestDTO.Controller.ParticipationRequestDto> rejectedRequests;
-        }
-
-        public static class Mapper {
-            public static ParticipationRequestDto toParticipationRequestDto(Request request) {
-                ParticipationRequestDto item = ParticipationRequestDto.builder()
-                        .id(request.getId())
-                        .created(request.getCreated())
-                        .event(request.getEvent().getId())
-                        .requester(request.getRequester().getId())
-                        .status(request.getStatus().name())
-                        .build();
-                return item;
-            }
-
         }
 
     }
