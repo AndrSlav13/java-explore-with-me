@@ -37,7 +37,7 @@ public enum CompilationDTO {
         @Data
         @Builder
         public static class NewCompilationDto implements TitleI, EventsI {
-            private Boolean pinned;
+            private boolean pinned;
             private String title;
             private List<Long> events;
         }
