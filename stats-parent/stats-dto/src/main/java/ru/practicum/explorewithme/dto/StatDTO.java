@@ -3,6 +3,7 @@ package ru.practicum.explorewithme.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.practicum.explorewithme.model.ServiceIDConstrain;
 
 import javax.validation.constraints.Pattern;
@@ -40,7 +41,7 @@ public enum StatDTO {
 
     @Builder(toBuilder = true)
     @Data
-    public static class NewStatDTO implements Ip, Timestamp, App {
+    public static class NewStatDTO {
         Long id;
         String app;     //application/module to get statistics
         String uri;     //uri of interest
@@ -51,6 +52,7 @@ public enum StatDTO {
     @Builder
     @Data
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class ReturnStatDTO {
         String app;
         String uri;

@@ -2,6 +2,7 @@ package ru.practicum.explorewithme.statistics.controller;
 
 import io.micrometer.core.lang.Nullable;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.dto.StatDTO;
@@ -17,7 +18,8 @@ public class StatisticsController {
     private final StatisticsService statisticsService;
 
     @PostMapping("/hit")
-    public StatDTO.NewStatDTO addRecord(@RequestBody StatDTO.NewStatDTO statDTO,
+    @ResponseStatus(HttpStatus.CREATED)
+    public StatDTO.NewStatDTO addRecord(@RequestBody List<StatDTO.NewStatDTO> statDTO,
                                         @Nullable @RequestHeader("X-Explorer-User-Id") Long userId) {
         return statisticsService.addRecord(statDTO, userId);
     }
@@ -25,7 +27,7 @@ public class StatisticsController {
     @GetMapping(path = "/stats")
     public List<StatDTO.ReturnStatDTO> getRecords(@RequestParam String start,
                                                   @RequestParam String end,
-                                                  @RequestParam List<String> uris,
+                                                  @RequestParam(required = false) @Nullable List<String> uris,
                                                   @RequestParam(defaultValue = "false") String unique,
                                                   @Nullable @RequestHeader("X-Explorer-User-Id") Long userId,
                                                   @RequestParam(defaultValue = "0") Integer from,

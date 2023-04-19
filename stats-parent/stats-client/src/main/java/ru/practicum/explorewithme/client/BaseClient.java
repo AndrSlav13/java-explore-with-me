@@ -9,12 +9,10 @@ import java.util.List;
 import java.util.Map;
 
 public class BaseClient {
-    protected final RestTemplate restPost;
-    protected final RestTemplate restGet;
+    protected final RestTemplate restClient;
 
-    public BaseClient(RestTemplate restPost, RestTemplate restGet) {
-        this.restPost = restPost;
-        this.restGet = restGet;
+    public BaseClient(RestTemplate restClient) {
+        this.restClient = restClient;
     }
 
     protected ResponseEntity<Object> get(String path) {
@@ -83,13 +81,9 @@ public class BaseClient {
         ResponseEntity<Object> shareitServerResponse;
         try {
             if (parameters != null) {
-                if (method.name().equals("GET"))
-                    shareitServerResponse = restGet.exchange(path, method, requestEntity, Object.class, parameters);
-                else shareitServerResponse = restPost.exchange(path, method, requestEntity, Object.class, parameters);
+                shareitServerResponse = restClient.exchange(path, method, requestEntity, Object.class, parameters);
             } else {
-                if (method.name().equals("GET"))
-                    shareitServerResponse = restGet.exchange(path, method, requestEntity, Object.class);
-                else shareitServerResponse = restPost.exchange(path, method, requestEntity, Object.class);
+                shareitServerResponse = restClient.exchange(path, method, requestEntity, Object.class);
             }
         } catch (HttpStatusCodeException e) {
             return ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAsByteArray());

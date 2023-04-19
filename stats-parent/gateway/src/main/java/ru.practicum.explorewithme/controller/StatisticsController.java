@@ -2,6 +2,7 @@ package ru.practicum.explorewithme.controller;
 
 import io.micrometer.core.lang.Nullable;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -21,16 +22,17 @@ public class StatisticsController {
     private final StatisticsClient statisticsClient;
 
     @PostMapping("/hit")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> addRecord(@RequestBody @Valid StatDTO.NewStatDTO statDTO,
                                             @Nullable @RequestHeader("X-Explorer-User-Id") Long userId) {
-        return statisticsClient.addRecord(userId, statDTO);
+        return statisticsClient.addRecords(userId, List.of(statDTO));
     }
 
     @GetMapping(path = "/stats")
     public ResponseEntity<Object> getRecords(@Pattern(regexp = StatDTO.patternTimeStamp, message = "wrong format for time interval 'start'") @RequestParam String start,
                                              @Pattern(regexp = StatDTO.patternTimeStamp, message = "wrong format for time interval 'end'") @RequestParam String end,
-                                             @RequestParam List<String> uris,
-                                             @Pattern(regexp = "(?i)^trUe$|^faLse$", message = "wrong format for check uniquness of users") @RequestParam(defaultValue = "false") String unique,
+                                             @RequestParam(required = false) @Nullable List<String> uris,
+                                             @RequestParam(defaultValue = "false") Boolean unique,
                                              @Nullable @RequestHeader("X-Explorer-User-Id") Long userId,
                                              @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
                                              @Positive @RequestParam(defaultValue = "10") Integer size) {
@@ -38,7 +40,7 @@ public class StatisticsController {
                 StatDTO.stringToLocalDateTime(start),
                 StatDTO.stringToLocalDateTime(end),
                 uris,
-                Boolean.parseBoolean(unique.toLowerCase()),
+                unique,
                 from,
                 size);
     }
