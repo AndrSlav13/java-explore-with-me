@@ -3,7 +3,11 @@ package ru.practicum.explorewithme.event.model;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.explorewithme.category.model.Category;
+
+
+import ru.practicum.explorewithme.comment.model.Comment;
 import ru.practicum.explorewithme.compilation.model.Compilation;
+import ru.practicum.explorewithme.exceptions.ApiErrorException;
 import ru.practicum.explorewithme.request.model.Request;
 import ru.practicum.explorewithme.user.model.User;
 
@@ -63,9 +67,17 @@ public class Event {
     @Builder.Default
     @ToString.Exclude
     @OneToMany(mappedBy = "event",
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE})
+    Set<Request> requesters = new HashSet<>();
+
+    @Builder.Default
+    @ToString.Exclude
+    @OneToMany(mappedBy = "commented",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
-    Set<Request> requesters = new HashSet<>();
+    Set<Comment> comments = new HashSet<>();
 
     @Builder.Default
     @ToString.Exclude
@@ -84,5 +96,17 @@ public class Event {
         if (category != null) category.removeEvent(this);
         this.category = category;
         category.addEvent(this);
+    }
+
+    public void addComment(Comment comment) {
+        if(comment == null)
+            throw new ApiErrorException(409, "comment isn't added", "comment object is null");
+        comment.setCommented(this);
+        comments.add(comment);
+    }
+
+    public void removeComment(Comment comment) {
+        comment.setCommented(null);
+        comments.remove(comment);
     }
 }

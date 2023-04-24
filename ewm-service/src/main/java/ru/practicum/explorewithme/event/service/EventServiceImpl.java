@@ -17,7 +17,7 @@ import ru.practicum.explorewithme.dto.StatDTO;
 import ru.practicum.explorewithme.event.dto.EventDTO;
 import ru.practicum.explorewithme.event.dto.EventMapper;
 import ru.practicum.explorewithme.event.model.Event;
-import ru.practicum.explorewithme.event.model.Sort;
+import ru.practicum.explorewithme.event.model.SortEvent;
 import ru.practicum.explorewithme.event.model.StateActionEvent;
 import ru.practicum.explorewithme.event.model.StateEvent;
 import ru.practicum.explorewithme.event.repository.EventRepository;
@@ -75,7 +75,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventDTO.Controller.EventShortDto> findAllByInitiatorDTO(Long userId, Pageable pg) {
         List<Event> events = eventRepository.findAllByInitiatorId(userId, pg);
-        return getShortEventsDTO(events, Sort.EVENT_DATE.toString());
+        return getShortEventsDTO(events, SortEvent.EVENT_DATE.toString());
     }
 
     @Override
@@ -83,7 +83,7 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.findEventByInitiatorIdAndId(userId, id).orElseThrow(
                 () -> new ApiErrorException(404, "Event not found", "Event id=" + id + " is absent")
         );
-        EventDTO.Controller.EventShortDto eventShortDto = getShortEventsDTO(List.of(event), Sort.EVENT_DATE.toString()).get(0);
+        EventDTO.Controller.EventShortDto eventShortDto = getShortEventsDTO(List.of(event), SortEvent.EVENT_DATE.toString()).get(0);
         return EventMapper.toEventFullDto(eventShortDto, event);
     }
 
@@ -160,7 +160,7 @@ public class EventServiceImpl implements EventService {
         List<Event> events = eventRepository.getEventsAdmin(users, states == null ? null : states.stream().map(a -> StateEvent.valueOf(a)).collect(Collectors.toList()), categories,
                 rangeStart == null ? null : LocalDateTime.parse(rangeStart, StatDTO.formatDateTime), rangeEnd == null ? null : LocalDateTime.parse(rangeEnd, StatDTO.formatDateTime), pg);
         Map<Long, Event> mapEvent = events.stream().collect(Collectors.toMap(a -> a.getId(), a -> a, (a, b) -> a));
-        List<EventDTO.Controller.EventShortDto> eventsDto = getShortEventsDTO(events, Sort.EVENT_DATE.toString());
+        List<EventDTO.Controller.EventShortDto> eventsDto = getShortEventsDTO(events, SortEvent.EVENT_DATE.toString());
         return eventsDto.stream().map(a -> EventMapper.toEventFullDto(a, mapEvent.get(a.getId()))).collect(Collectors.toList());
     }
 
@@ -228,7 +228,7 @@ public class EventServiceImpl implements EventService {
     public List<EventDTO.Controller.EventShortDto> findEventsByIdInDTO(List<Long> ids) {
         Pageable pg = PageRequest.of(0, max(ids.size(), 1));
         List<Event> events = eventRepository.findAllByIdIn(ids);
-        return getShortEventsDTO(events, Sort.EVENT_DATE.toString());
+        return getShortEventsDTO(events, SortEvent.EVENT_DATE.toString());
     }
 
     @Override
@@ -269,7 +269,7 @@ public class EventServiceImpl implements EventService {
                         mapInitiator.get(a.getInitiator().getId()),
                         eventViews.get(a.getId())
                 )
-        ).sorted(new EventDTO.Controller.EventShortDto.Comparator(Sort.valueOf(sort))).collect(Collectors.toList());
+        ).sorted(new EventDTO.Controller.EventShortDto.Comparator(SortEvent.valueOf(sort))).collect(Collectors.toList());
     }
 }
 

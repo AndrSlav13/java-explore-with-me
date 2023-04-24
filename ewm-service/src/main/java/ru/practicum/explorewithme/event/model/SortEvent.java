@@ -1,5 +1,5 @@
 package ru.practicum.explorewithme.event.model;
 
-public enum Sort {
+public enum SortEvent {
     EVENT_DATE, VIEWS;
 }

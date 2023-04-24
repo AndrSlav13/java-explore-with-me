@@ -15,7 +15,7 @@ import ru.practicum.explorewithme.event.dto.constraints.EnumStateActionEventCons
 import ru.practicum.explorewithme.event.dto.constraints.EnumStateEventConstrain;
 import ru.practicum.explorewithme.event.dto.constraints.LocationConstrain;
 import ru.practicum.explorewithme.event.model.Location;
-import ru.practicum.explorewithme.event.model.Sort;
+import ru.practicum.explorewithme.event.model.SortEvent;
 import ru.practicum.explorewithme.event.model.StateActionEvent;
 import ru.practicum.explorewithme.exceptions.WrongEnumStatusException;
 import ru.practicum.explorewithme.request.dto.EnumStatusEventConstrain;
@@ -129,6 +129,14 @@ public enum EventDTO {
         @Data
         @Builder
         @AllArgsConstructor
+        public static class EventForCommentDto {
+            private Long id;
+            private String title;
+        }
+
+        @Data
+        @Builder
+        @AllArgsConstructor
         public static class EventShortDto {
             private Long id;
             private String annotation;
@@ -141,9 +149,9 @@ public enum EventDTO {
             private Long views;
 
             public static class Comparator implements java.util.Comparator<EventShortDto> {
-                private final Sort sort;
+                private final SortEvent sort;
 
-                public Comparator(Sort sort) {
+                public Comparator(SortEvent sort) {
                     this.sort = sort;
                 }
 

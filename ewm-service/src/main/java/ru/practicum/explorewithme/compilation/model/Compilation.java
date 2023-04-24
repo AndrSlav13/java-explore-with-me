@@ -44,7 +44,7 @@ public class Compilation {
     public void removeEvents() {
         events.stream().forEach(a -> {
             events.remove(a);
-            a.getCompilations().remove(a);
+            a.getCompilations().remove(this);
         });
     }
 }

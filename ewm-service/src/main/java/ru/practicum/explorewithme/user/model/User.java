@@ -7,6 +7,7 @@ import ru.practicum.explorewithme.request.model.Request;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 @Builder(toBuilder = true)
@@ -31,15 +32,13 @@ public class User {
     @Builder.Default
     @ToString.Exclude
     @OneToMany(mappedBy = "initiator",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     Set<Event> eventsInited = new HashSet<>();
 
     @Builder.Default
     @ToString.Exclude
     @OneToMany(mappedBy = "requester",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     Set<Request> eventsRequested = new HashSet<>();
 
     public Event addEventInited(Event event) {
@@ -52,6 +51,21 @@ public class User {
         eventsRequested.add(request);
         event.getRequesters().add(request);
         return request;
+    }
+
+    public void removeEventRequest(Event event) {
+        for (Iterator<Request> iterator = eventsRequested.iterator();
+             iterator.hasNext(); ) {
+            Request request = iterator.next();
+
+            if (request.getRequester().equals(this) &&
+                    request.getEvent().equals(event)) {
+                iterator.remove();
+                request.getEvent().getRequesters().remove(request);
+                request.setRequester(null);
+                request.setEvent(null);
+            }
+        }
     }
 
 }
