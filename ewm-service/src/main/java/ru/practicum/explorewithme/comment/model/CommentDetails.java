@@ -5,6 +5,8 @@ package ru.practicum.explorewithme.comment.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -29,6 +31,7 @@ public class CommentDetails {
     String description;
     LocalDateTime date;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)  //unidirectional связь - cascade и orphanRemoval не применить
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     Comment comment;

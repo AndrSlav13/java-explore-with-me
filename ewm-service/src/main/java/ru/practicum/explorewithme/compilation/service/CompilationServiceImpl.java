@@ -91,6 +91,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public void delete(Long id) {
         Compilation comp = findCompilationById(id);
+        comp.onRemoveEntity();
         compilationRepository.delete(comp);
     }
 
@@ -101,7 +102,7 @@ public class CompilationServiceImpl implements CompilationService {
         List<Event> events = eventService.findEventsByIdIn(compDto.getEvents());
         if (compDto.getPinned() != null) comp.setPinned(compDto.getPinned());
         if (compDto.getTitle() != null) comp.setTitle(compDto.getTitle());
-        comp.removeEvents();
+        comp.onRemoveEntity();
         events.stream().forEach(a -> comp.addEvent(a));
         List<EventDTO.Controller.EventShortDto> eventShortDtos = eventService.findEventsByIdInDTO(compDto.getEvents());
         return CompilationDTO.Controller.CompilationDto.builder()

@@ -60,21 +60,4 @@ public class Request {
     public User getRequester() {
         return requester;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass())
-            return false;
-
-        Request that = (Request) o;
-        return Objects.equals(event, that.event) &&
-                Objects.equals(requester, that.requester);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(event, requester);
-    }
 }

@@ -2,6 +2,7 @@ package ru.practicum.explorewithme.user.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.explorewithme.EntityInterfaces;
 import ru.practicum.explorewithme.event.model.Event;
 import ru.practicum.explorewithme.request.model.Request;
 
@@ -20,7 +21,7 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "users", schema = "public")
-public class User {
+public class User implements EntityInterfaces {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
@@ -32,19 +33,31 @@ public class User {
     @Builder.Default
     @ToString.Exclude
     @OneToMany(mappedBy = "initiator",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+            cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+            })
     Set<Event> eventsInited = new HashSet<>();
 
     @Builder.Default
     @ToString.Exclude
     @OneToMany(mappedBy = "requester",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+            cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+            },
+            orphanRemoval = true)
     Set<Request> eventsRequested = new HashSet<>();
 
     public Event addEventInited(Event event) {
         event.setInitiator(this);
         eventsInited.add(event);
         return event;
+    }
+
+    public void removeEventInited(Event event) {
+        eventsInited.remove(event);
+        event.setInitiator(null);
     }
 
     public Request addEventRequest(Event event, Request request) {
@@ -66,6 +79,13 @@ public class User {
                 request.setEvent(null);
             }
         }
+    }
+
+    public void onRemoveEntity() {
+        eventsRequested.stream().forEach(a -> removeEventRequest(a.getEvent()));
+            eventsRequested.removeAll(eventsRequested);
+        eventsInited.stream().forEach(a -> a.setInitiator(null));
+            eventsInited.removeAll(eventsInited);
     }
 
 }

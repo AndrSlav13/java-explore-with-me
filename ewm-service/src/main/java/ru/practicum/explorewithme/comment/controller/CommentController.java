@@ -103,7 +103,7 @@ public class CommentController {
     @DeleteMapping(path = "/admin/events/comments/{commentId}")
     @ResponseStatus(value = HttpStatus.ACCEPTED)
     public CommentDTO.Controller.CommentAdminDto removeCommentAdmin(@PathVariable Long commentId) {
-        return commentService.deleteCommentAdmin(commentId);
+        return commentService.removeCommentAdmin(commentId);
     }
 
 

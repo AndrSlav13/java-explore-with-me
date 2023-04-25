@@ -126,12 +126,13 @@ public class CommentServiceImpl implements CommentService {
 
         if(user.getId() != comment.getCommenter().getId())
             throw new ApiErrorException(409, "the comment can't be removed", "the user isn't author of the comment");
+
         Event event = eventService.findEventById(comment.getCommented().getId());
         if (comment.getParentComment() == null)
             event.removeComment(comment);
         else
             comment.getParentComment().removeComment(comment);
-        commentRepository.delete(comment);
+
         return commentDto;
     }
 
@@ -193,7 +194,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public CommentDTO.Controller.CommentAdminDto deleteCommentAdmin(Long commentId) {
+    public CommentDTO.Controller.CommentAdminDto removeCommentAdmin(Long commentId) {
         Comment comment = findCommentById(commentId);
         Event event = eventService.findEventById(comment.getCommented().getId());
         CommentDTO.Controller.CommentAdminDto commentAdminDto = outputCommentsAdminDTOs(List.of(comment)).get(0);
@@ -201,7 +202,6 @@ public class CommentServiceImpl implements CommentService {
             event.removeComment(comment);
         else
             comment.getParentComment().removeComment(comment);
-        commentRepository.delete(comment);
 
         return commentAdminDto;
     }

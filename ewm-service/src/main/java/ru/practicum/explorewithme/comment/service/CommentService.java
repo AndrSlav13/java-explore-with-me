@@ -21,7 +21,7 @@ public interface CommentService {
 
     CommentDTO.Controller.CommentAdminDto patchCommentAdmin(CommentDTO.Controller.PatchCommentAdminDto commentDto, Long commentId);
 
-    CommentDTO.Controller.CommentAdminDto deleteCommentAdmin(Long commentId);
+    CommentDTO.Controller.CommentAdminDto removeCommentAdmin(Long commentId);
 
     List<CommentDTO.Controller.CommentDto> getCommentsPublic(List<Long> eventId, String text, String rangeStart, String rangeEnd, Integer from, Integer size);
 }

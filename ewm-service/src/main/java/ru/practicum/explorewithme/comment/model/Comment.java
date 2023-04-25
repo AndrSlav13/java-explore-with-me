@@ -12,6 +12,7 @@ package ru.practicum.explorewithme.comment.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.explorewithme.EntityInterfaces;
 import ru.practicum.explorewithme.event.model.Event;
 import ru.practicum.explorewithme.user.model.User;
 
@@ -30,7 +31,7 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "comments", schema = "public")
-public class Comment {
+public class Comment implements EntityInterfaces {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
@@ -47,7 +48,10 @@ public class Comment {
     Boolean isPublished;
 
     @Builder.Default
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY,
+               mappedBy = "parentComment",
+               orphanRemoval = true,
+            cascade = CascadeType.ALL)
     Set<Comment> childComments = new HashSet<>();
     @Access(AccessType.PROPERTY)    //bidirectional
     @ManyToOne(fetch = FetchType.LAZY)
@@ -70,7 +74,7 @@ public class Comment {
         return this.commented;
     }
 
-    public void addComment(Comment comment) {
+    public void addComment(Comment comment) {   //Допустим один уровень вложенности комментария
         if(comment.parentComment != null) comment.parentComment.addComment(comment);
         else {
             childComments.add(comment);
@@ -79,7 +83,15 @@ public class Comment {
     }
 
     public void removeComment(Comment comment) {
-        childComments.remove(comment);
         comment.setParentComment(null);
+        childComments.remove(comment);
+    }
+
+    public void onRemoveEntity() {
+        childComments.stream().forEach(a -> {a.onRemoveEntity(); a.setParentComment(null);});
+            childComments.removeAll(childComments);
+        setCommented(null);
+        setCommenter(null);
+
     }
 }
