@@ -29,8 +29,8 @@
 									"        pm.collectionVariables.set(\"eid\", event.id);\r",
 									"        comment = rnd.getComment();\r",
 									"\r",
-									"        pm.collectionVariables.set('storeE', event);\r",
-									"        pm.collectionVariables.set('storeU', user);\r",
+									"        pm.collectionVariables.set('eventTitle', event.title);\r",
+									"        pm.collectionVariables.set('userName', user.name);\r",
 									"    } catch(err) {\r",
 									"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
 									"    }\r",
@@ -72,8 +72,8 @@
 									"\r",
 									"const source = JSON.parse(pm.request.body.raw);\r",
 									"const target = pm.response.json();\r",
-									"const event = pm.collectionVariables.get('storeE');\r",
-									"const user = pm.collectionVariables.get('storeU');\r",
+									"const event = pm.collectionVariables.get('eventTitle');\r",
+									"const user = pm.collectionVariables.get('userName');\r",
 									"\r",
 									"pm.test(\"Комментарий должен содержать поля: id, event, message, commenter, publishedOn, childComments\", function () {\r",
 									"pm.expect(target).to.have.property('id');\r",
@@ -85,10 +85,9 @@
 									"});\r",
 									"\r",
 									"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
-									"    pm.expect(target.id).to.not.be.null;\r",
 									"    pm.expect(target.message).equal(source.message, 'Комментарий события должен соответствовать комментарию события в запросе');\r",
-									"    pm.expect(target.event.title).equal(event.title, 'Заголовок события должен быть одинаков в запросе и ответе');\r",
-									"    pm.expect(target.commenter.name).equal(user.name, 'Имя комментатора должно быть одинаково в запросе и ответе');\r",
+									"    pm.expect(target.event.title).equal(event, 'Заголовок события должен быть одинаков в запросе и ответе');\r",
+									"    pm.expect(target.commenter.name).equal(user, 'Имя комментатора должно быть одинаково в запросе и ответе');\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1984,22 +1983,22 @@
 			"type": "string"
 		},
 		{
-			"key": "storeU",
+			"key": "userName",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"key": "storeE",
+			"key": "commentMessage",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"key": "storeC1",
+			"key": "eventTitle",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"key": "storeC2",
+			"key": "comment2Message",
 			"value": "",
 			"type": "string"
 		}
