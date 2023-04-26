@@ -1358,7 +1358,7 @@
 									"            let comment3 = await api.addCommentToComment(user.id, comment2.id, rnd.getComment());\r",
 									"            let comment4 = await api.addCommentToComment(user.id, comment3.id, rnd.getComment());\r",
 									"            all = await api.getComment(user.id, event.id);\r",
-									"           \r",
+									"            all = JSON.parse(all);\r",
 									"            pm.collectionVariables.set('commentMessage', commentWithoutSubComments.message);\r",
 									"            pm.collectionVariables.set('comida', commentWithoutSubComments.id);\r",
 									"            pm.collectionVariables.set('eventTitle', event.title);\r",
