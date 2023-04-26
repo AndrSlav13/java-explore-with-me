@@ -124,7 +124,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = findCommentById(commentId);
         CommentDTO.Controller.CommentDto commentDto = outputCommentsDTO(comment);
 
-        if (user.getId() != comment.getCommenter().getId())
+        if (!user.getId().equals(comment.getCommenter().getId()))
             throw new ApiErrorException(409, "the comment can't be removed", "the user isn't author of the comment");
 
         comment.removeComment();
