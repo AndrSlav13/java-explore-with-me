@@ -127,11 +127,7 @@ public class CommentServiceImpl implements CommentService {
         if(user.getId() != comment.getCommenter().getId())
             throw new ApiErrorException(409, "the comment can't be removed", "the user isn't author of the comment");
 
-        Event event = eventService.findEventById(comment.getCommented().getId());
-        if (comment.getParentComment() == null)
-            event.removeComment(comment);
-        else
-            comment.getParentComment().removeComment(comment);
+        comment.onRemoveEntity();
 
         return commentDto;
     }
@@ -196,12 +192,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentDTO.Controller.CommentAdminDto removeCommentAdmin(Long commentId) {
         Comment comment = findCommentById(commentId);
-        Event event = eventService.findEventById(comment.getCommented().getId());
         CommentDTO.Controller.CommentAdminDto commentAdminDto = outputCommentsAdminDTOs(List.of(comment)).get(0);
-        if(comment.getParentComment() == null)
-            event.removeComment(comment);
-        else
-            comment.getParentComment().removeComment(comment);
+        comment.onRemoveEntity();
 
         return commentAdminDto;
     }
@@ -329,7 +321,8 @@ public class CommentServiceImpl implements CommentService {
                                 .publishedOn(a.getPublishedOn().format(StatDTO.formatDateTime))
                                 .event(mapEventDto.get(a.getCommented().getId()))
                                 .commentDetails(mapCommentDetails.get(a.getId()))
-                                .build()).collect(Collectors.toList());
+                                .parentId(a.getParentComment() == null ? null : a.getParentComment().getId())
+                                .build()).sorted(CommentDTO.Controller.CommentAdminDto.Comparator::compare).collect(Collectors.toList());
 
         return rez;
     }

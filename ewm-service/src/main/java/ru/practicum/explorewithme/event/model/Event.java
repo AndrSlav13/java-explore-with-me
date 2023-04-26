@@ -108,7 +108,6 @@ public class Event implements EntityInterfaces {
     }
 
     public void removeComment(Comment comment) {
-        comment.onRemoveEntity();   //Вместо cascade используется orphanRemoval
         comment.setCommented(null);
         comments.remove(comment);
     }

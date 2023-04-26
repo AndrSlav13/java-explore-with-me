@@ -58,12 +58,13 @@ public enum CommentDTO {
 
             public static class Comparator {
 
-                public static int compare(CommentDto a1, CommentDto a2) {
+                public static int compare(CommentAdminDto a1, CommentAdminDto a2) {
                     if (LocalDateTime.parse(a1.publishedOn, StatDTO.formatDateTime)
                             .isBefore(LocalDateTime.parse(a2.publishedOn, StatDTO.formatDateTime))) return 1;
                     return -1;
                 }
             }
+
         }
 
         @Data

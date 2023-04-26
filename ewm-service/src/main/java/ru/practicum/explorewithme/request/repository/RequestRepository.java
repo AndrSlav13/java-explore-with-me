@@ -14,12 +14,5 @@ public interface RequestRepository extends JpaRepository<Request, Long>, Request
 
     List<Request> findAllByEventId(Long eventId);
 
-    /*
-    @Modifying
-    @Query("update Request as r set r.status = :status " +
-           "where r.id in :ids ")
-    List<Request> updateStatusRequests(@Param("ids") List<Long> ids, @Param("status") String status);
-
-     */
     List<Request> findAllByIdInAndStatusIn(List<Long> id, List<StatusEventParticipation> status);
 }

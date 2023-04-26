@@ -82,16 +82,21 @@ public class Comment implements EntityInterfaces {
         }
     }
 
-    public void removeComment(Comment comment) {
-        comment.setParentComment(null);
-        childComments.remove(comment);
+    public void removeComment() {
+        if(parentComment != null) {
+            parentComment.getChildComments().remove(this);
+            parentComment.setParentComment(null);
+        } else {
+            commented.removeComment(this);
+        }
     }
 
     public void onRemoveEntity() {
+        if(parentComment == null) removeComment();
         childComments.stream().forEach(a -> {a.onRemoveEntity(); a.setParentComment(null);});
-            childComments.removeAll(childComments);
+        childComments.removeAll(childComments);
+
         setCommented(null);
         setCommenter(null);
-
     }
 }
