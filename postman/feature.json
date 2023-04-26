@@ -1359,13 +1359,13 @@
 									"            comment = await api.addCommentToComment(user.id, comment.id, rnd.getComment());\r",
 									"            allEventComments = await api.getComment(user.id, event.id);\r",
 									"            pm.collectionVariables.set('commentMessage', commentWithoutSubComments.message);\r",
-									"            pm.collectionVariables.set('comid1', commentWithoutSubComments.id);\r",
+									"            pm.collectionVariables.set('comida', commentWithoutSubComments.id);\r",
 									"            pm.collectionVariables.set('eventTitle', event.title);\r",
 									"            pm.collectionVariables.set('userName', user.name);\r",
 									"            pm.collectionVariables.set('comment2Message', allEventComments[0].message);\r",
-									"            pm.collectionVariables.set('comid2', allEventComments[0].id);\r",
-									"            pm.collectionVariables.set('comid20', allEventComments[0].childComments[0].id);\r",
-									"            pm.collectionVariables.set('comid21', allEventComments[0].childComments[1].id);\r",
+									"            pm.collectionVariables.set('comidb', allEventComments[0].id);\r",
+									"            pm.collectionVariables.set('comidba', allEventComments[0].childComments[0].id);\r",
+									"            pm.collectionVariables.set('comidbb', allEventComments[0].childComments[1].id);\r",
 									"        }, 1000);\r",
 									"        \r",
 									"    } catch(err) {\r",
@@ -1412,11 +1412,11 @@
 									"const eid = parseInt(pm.collectionVariables.get('eid'));\r",
 									"const user = pm.collectionVariables.get('userName');\r",
 									"const commentWithoutSubCommentsMessage = pm.collectionVariables.get('commentMessage');\r",
-									"const commentWithoutSubCommentsId = parseInt(pm.collectionVariables.get('comid1'));\r",
+									"const commentWithoutSubCommentsId = parseInt(pm.collectionVariables.get('comida'));\r",
 									"const allEventCommentsMessage = pm.collectionVariables.get('comment2Message');\r",
-									"const allEventCommentsId0 = parseInt(pm.collectionVariables.get('comid2'));\r",
-									"const allEventCommentsId1 = parseInt(pm.collectionVariables.get('comid20'));\r",
-									"const allEventCommentsId2 = parseInt(pm.collectionVariables.get('comid21'));\r",
+									"const allEventCommentsId0 = parseInt(pm.collectionVariables.get('comidb'));\r",
+									"const allEventCommentsId1 = parseInt(pm.collectionVariables.get('comidba'));\r",
+									"const allEventCommentsId2 = parseInt(pm.collectionVariables.get('comidbb'));\r",
 									"\r",
 									"pm.test(\"Комментарий должен содержать поля: id, event, message, commenter, publishedOn, commentDetails\", function () {\r",
 									"pm.expect(target).to.have.property('id');\r",
@@ -2040,22 +2040,22 @@
 			"type": "string"
 		},
 		{
-			"key": "comid2",
+			"key": "comidb",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"key": "comid20",
+			"key": "comidba",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"key": "comid21",
+			"key": "comidbb",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"key": "comid1",
+			"key": "comida",
 			"value": "",
 			"type": "string"
 		}
