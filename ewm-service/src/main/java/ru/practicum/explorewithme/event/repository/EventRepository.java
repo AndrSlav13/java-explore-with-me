@@ -19,11 +19,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     Optional<Event> findEventByIdAndCategory(Long id, String category);
 
     @Query("select e from Event as e " +
-           "where (coalesce(:users , null) is null OR e.initiator.id in :users) " +
-           "AND (coalesce(:states , null) is null OR e.state in :states) " +
-           "AND (coalesce(:categories , null) is null OR e.category.id in :categories) " +
-           "AND (coalesce(:rangeStart , null) is null OR e.eventDate >= :rangeStart) " +
-           "AND (coalesce(:rangeEnd , null) is null OR e.eventDate <= :rangeEnd) ")
+            "where (coalesce(:users , null) is null OR e.initiator.id in :users) " +
+            "AND (coalesce(:states , null) is null OR e.state in :states) " +
+            "AND (coalesce(:categories , null) is null OR e.category.id in :categories) " +
+            "AND (coalesce(:rangeStart , null) is null OR e.eventDate >= :rangeStart) " +
+            "AND (coalesce(:rangeEnd , null) is null OR e.eventDate <= :rangeEnd) ")
     List<Event> getEventsAdmin(@Param("users") List<Long> users,
                                @Param("states") List<StateEvent> states,
                                @Param("categories") List<Long> categories,

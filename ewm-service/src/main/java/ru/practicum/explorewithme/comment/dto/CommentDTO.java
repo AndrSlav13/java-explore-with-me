@@ -4,7 +4,10 @@ event -> shortEvent -> fullEvent
 **/
 package ru.practicum.explorewithme.comment.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import ru.practicum.explorewithme.dto.StatDTO;
 import ru.practicum.explorewithme.event.dto.EventDTO;
@@ -16,6 +19,7 @@ import java.util.List;
 
 public enum CommentDTO {
     ;
+
     private interface MessageI {
         @NotNull
         @Length(min = 5, max = 2000)
@@ -24,6 +28,7 @@ public enum CommentDTO {
 
     public enum Controller {
         ;
+
         @Data
         @Builder(toBuilder = true)
         public static class CommentDto {
@@ -37,12 +42,12 @@ public enum CommentDTO {
             public static class Comparator {
 
                 public static int compare(CommentDto a1, CommentDto a2) {
-                            if (LocalDateTime.parse(a1.publishedOn, StatDTO.formatDateTime)
-                                    .isBefore(LocalDateTime.parse(a2.publishedOn, StatDTO.formatDateTime))) return 1;
-                            return -1;
-                    }
+                    if (LocalDateTime.parse(a1.publishedOn, StatDTO.formatDateTime)
+                            .isBefore(LocalDateTime.parse(a2.publishedOn, StatDTO.formatDateTime))) return 1;
+                    return -1;
                 }
             }
+        }
 
 
         @Data

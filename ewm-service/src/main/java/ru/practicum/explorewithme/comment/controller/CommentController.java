@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.comment.dto.CommentDTO;
 import ru.practicum.explorewithme.comment.service.CommentService;
 
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -55,7 +54,7 @@ public class CommentController {
     //Удалить комментарий
     @DeleteMapping(path = "/users/{userId}/events/comments/{commentId}")
     @ResponseBody
-    @ResponseStatus(value = HttpStatus.ACCEPTED)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public CommentDTO.Controller.CommentDto removeCommentUser(@PathVariable Long userId,
                                                               @PathVariable Long commentId) {
         return commentService.removeCommentUser(userId, commentId);
@@ -66,8 +65,8 @@ public class CommentController {
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
     public CommentDTO.Controller.CommentDto patchCommentUser(@RequestBody @Valid CommentDTO.Controller.PatchCommentUserDto commentDto,
-                                                                   @PathVariable Long userId,
-                                                                   @PathVariable Long commentId) {
+                                                             @PathVariable Long userId,
+                                                             @PathVariable Long commentId) {
         return commentService.patchCommentUser(commentDto, userId, commentId);
     }
 
@@ -84,11 +83,11 @@ public class CommentController {
     @ResponseStatus(value = HttpStatus.OK)
     public List<CommentDTO.Controller.CommentAdminDto> getCommentsAdmin(@RequestParam(required = false) List<Long> eventId,
                                                                         @RequestParam(required = false) List<Long> userId,
-                                                                   @RequestParam(required = false) List<String> stateComments,
-                                                                   @RequestParam(required = false) String rangeStart,
-                                                                   @RequestParam(required = false) String rangeEnd,
-                                                                   @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
-                                                                   @Positive @RequestParam(defaultValue = "10") Integer size) {
+                                                                        @RequestParam(required = false) List<String> stateComments,
+                                                                        @RequestParam(required = false) String rangeStart,
+                                                                        @RequestParam(required = false) String rangeEnd,
+                                                                        @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+                                                                        @Positive @RequestParam(defaultValue = "10") Integer size) {
         return commentService.getCommentsAdmin(eventId, userId, stateComments, rangeStart, rangeEnd, from, size);
     }
 
@@ -96,7 +95,7 @@ public class CommentController {
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
     public CommentDTO.Controller.CommentAdminDto patchCommentAdmin(@RequestBody @Valid CommentDTO.Controller.PatchCommentAdminDto commentDto,
-                                                              @PathVariable Long commentId) {
+                                                                   @PathVariable Long commentId) {
         return commentService.patchCommentAdmin(commentDto, commentId);
     }
 

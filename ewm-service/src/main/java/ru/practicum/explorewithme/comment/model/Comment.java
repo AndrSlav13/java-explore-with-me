@@ -1,12 +1,12 @@
 /**
  * Комментарий к событию может иметь вложенный комментарий. Остальные на том же уровне.
  * Comment
- *       \
- *       Comment
- *       Comment
- *             \
- *       Comment
- *       Comment
+ * \
+ * Comment
+ * Comment
+ * \
+ * Comment
+ * Comment
  */
 package ru.practicum.explorewithme.comment.model;
 
@@ -49,10 +49,11 @@ public class Comment implements EntityInterfaces {
 
     @Builder.Default
     @OneToMany(fetch = FetchType.LAZY,
-               mappedBy = "parentComment",
-               orphanRemoval = true,
+            mappedBy = "parentComment",
+            orphanRemoval = true,
             cascade = CascadeType.ALL)
     Set<Comment> childComments = new HashSet<>();
+
     @Access(AccessType.PROPERTY)    //bidirectional
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_comment_id")
@@ -75,7 +76,7 @@ public class Comment implements EntityInterfaces {
     }
 
     public void addComment(Comment comment) {   //Допустим один уровень вложенности комментария
-        if(comment.parentComment != null) comment.parentComment.addComment(comment);
+        if (comment.parentComment != null) comment.parentComment.addComment(comment);
         else {
             childComments.add(comment);
             comment.setParentComment(this);
@@ -83,7 +84,7 @@ public class Comment implements EntityInterfaces {
     }
 
     public void removeComment() {
-        if(parentComment != null) {
+        if (parentComment != null) {
             parentComment.getChildComments().remove(this);
             parentComment.setParentComment(null);
         } else {
@@ -92,8 +93,11 @@ public class Comment implements EntityInterfaces {
     }
 
     public void onRemoveEntity() {
-        if(parentComment == null) removeComment();
-        childComments.stream().forEach(a -> {a.onRemoveEntity(); a.setParentComment(null);});
+        if (parentComment == null) removeComment();
+        childComments.stream().forEach(a -> {
+            a.onRemoveEntity();
+            a.setParentComment(null);
+        });
         childComments.removeAll(childComments);
 
         setCommented(null);

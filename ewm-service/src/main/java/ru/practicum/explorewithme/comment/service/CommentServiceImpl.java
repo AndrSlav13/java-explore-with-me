@@ -65,8 +65,8 @@ public class CommentServiceImpl implements CommentService {
                     return ar;
                 }
         ));
-        for(Comment com : parentComments)
-            if(com.getChildComments() == null || com.getChildComments().isEmpty()) mapSubComments.put(com, List.of());
+        for (Comment com : parentComments)
+            if (com.getChildComments() == null || com.getChildComments().isEmpty()) mapSubComments.put(com, List.of());
 
         return outputCommentsUserDTOs(mapSubComments);
     }
@@ -124,10 +124,10 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = findCommentById(commentId);
         CommentDTO.Controller.CommentDto commentDto = outputCommentsDTO(comment);
 
-        if(user.getId() != comment.getCommenter().getId())
+        if (user.getId() != comment.getCommenter().getId())
             throw new ApiErrorException(409, "the comment can't be removed", "the user isn't author of the comment");
 
-        comment.onRemoveEntity();
+        comment.removeComment();
 
         return commentDto;
     }
@@ -160,8 +160,8 @@ public class CommentServiceImpl implements CommentService {
         CommentDetails commentDetails = commentDetailsRepository.findById(commentId).orElse(
                 CommentDetails.builder().comment(comment).stateComment(StateComment.MODERATION).date(LocalDateTime.now()).build()
         );
-        if(commentDto.getDescription() != null) commentDetails.setDescription(commentDto.getDescription());
-        if(commentDto.getState() != null) commentDetails.setStateComment(StateComment.valueOf(commentDto.getState()));
+        if (commentDto.getDescription() != null) commentDetails.setDescription(commentDto.getDescription());
+        if (commentDto.getState() != null) commentDetails.setStateComment(StateComment.valueOf(commentDto.getState()));
         commentDetailsRepository.save(commentDetails);
 
         return outputCommentsDTO(comment);
@@ -193,7 +193,7 @@ public class CommentServiceImpl implements CommentService {
     public CommentDTO.Controller.CommentAdminDto removeCommentAdmin(Long commentId) {
         Comment comment = findCommentById(commentId);
         CommentDTO.Controller.CommentAdminDto commentAdminDto = outputCommentsAdminDTOs(List.of(comment)).get(0);
-        comment.onRemoveEntity();
+        comment.removeComment();
 
         return commentAdminDto;
     }
@@ -205,9 +205,11 @@ public class CommentServiceImpl implements CommentService {
                 rangeStart == null ? null : LocalDateTime.parse(rangeStart, StatDTO.formatDateTime),
                 rangeEnd == null ? null : LocalDateTime.parse(rangeEnd, StatDTO.formatDateTime), pg);
         Map<Comment, List<Comment>> mapComments = comments.stream().collect(Collectors.toMap(
-                a -> {a=a;
+                a -> {
+                    a = a;
                     Comment f = a.getParentComment();
-                    return a.getParentComment() == null ? a : a.getParentComment();},
+                    return a.getParentComment() == null ? a : a.getParentComment();
+                },
                 a -> a.getParentComment() == null ? List.of() : List.of(a),
                 (a, b) -> {
                     ArrayList<Comment> ar = new ArrayList(a);
@@ -272,9 +274,11 @@ public class CommentServiceImpl implements CommentService {
         return rez;
     }
 
+    //Краткий вывод
+    //Только рассматриваемый комментарий и корневой комментарий (к событию) при наличии
     public CommentDTO.Controller.CommentDto outputCommentsDTO(Comment comment) {
         Map<Comment, List<Comment>> mapComments = new HashMap<>();
-        if(comment.getParentComment() == null) mapComments.put(comment, List.of());
+        if (comment.getParentComment() == null) mapComments.put(comment, List.of());
         else mapComments.put(comment.getParentComment(), List.of(comment));
         return outputCommentsUserDTOs(mapComments).get(0);
     }

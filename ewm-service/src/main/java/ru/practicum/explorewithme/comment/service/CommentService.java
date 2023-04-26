@@ -7,12 +7,15 @@ import java.util.List;
 
 public interface CommentService {
     Comment findCommentById(Long id);
+
     List<CommentDTO.Controller.CommentDto> getCommentsUser(Long userId, Long eventId, Integer from, Integer size);
 
     CommentDTO.Controller.CommentDto addCommentToEventUser(CommentDTO.Controller.NewCommentDto commentDto, Long userId, Long eventId);
+
     CommentDTO.Controller.CommentDto addCommentToCommentUser(CommentDTO.Controller.NewCommentDto commentDto, Long userId, Long commentId);
 
     CommentDTO.Controller.CommentDto removeCommentUser(Long userId, Long commentId);
+
     CommentDTO.Controller.CommentDto patchCommentUser(CommentDTO.Controller.PatchCommentUserDto commentDto, Long userId, Long commentId);
 
     CommentDTO.Controller.CommentAdminDto getCommentAdmin(Long commentId);

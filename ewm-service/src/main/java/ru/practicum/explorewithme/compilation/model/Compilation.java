@@ -52,6 +52,6 @@ public class Compilation implements EntityInterfaces {
 
     public void onRemoveEntity() {
         events.stream().forEach(a -> a.getCompilations().remove(a));
-            events.removeAll(events);
+        events.removeAll(events);
     }
 }

@@ -11,7 +11,6 @@ import ru.practicum.explorewithme.user.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Builder(toBuilder = true)
 @Getter

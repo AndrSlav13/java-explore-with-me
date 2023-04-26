@@ -85,6 +85,5 @@ public class UserServiceImpl implements UserService {
         user.addEventRequest(event, request);
         requestRepository.save(request);
         return RequestMapper.toParticipationRequestDto(request);
-        //return userRepository.save(userId, eventId);
     }
 }

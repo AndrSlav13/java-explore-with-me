@@ -4,8 +4,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.explorewithme.EntityInterfaces;
 import ru.practicum.explorewithme.category.model.Category;
-
-
 import ru.practicum.explorewithme.comment.model.Comment;
 import ru.practicum.explorewithme.compilation.model.Compilation;
 import ru.practicum.explorewithme.exceptions.ApiErrorException;
@@ -54,9 +52,9 @@ public class Event implements EntityInterfaces {
     @Access(AccessType.PROPERTY)
     @ManyToOne(fetch = FetchType.LAZY,
             cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-    })
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     @JoinColumn(name = "category_id")
     public Category getCategory() {
         return this.category;
@@ -95,13 +93,13 @@ public class Event implements EntityInterfaces {
     Set<Compilation> compilations = new HashSet<>();
 
     public void setCategory(Category category) {
-        if(this.category != null) this.category.removeEvent(this);
+        if (this.category != null) this.category.removeEvent(this);
         this.category = category;
         category.addEvent(this);
     }
 
     public void addComment(Comment comment) {
-        if(comment == null)
+        if (comment == null)
             throw new ApiErrorException(409, "comment isn't added", "comment object is null");
         comment.setCommented(this);
         comments.add(comment);
@@ -114,13 +112,17 @@ public class Event implements EntityInterfaces {
 
     //Чтобы обеспечить разрыв связи сущностей и orphanRemoval при необходимости
     public void onRemoveEntity() {
-        comments.stream().forEach(a -> {a.onRemoveEntity(); a.setCommented(null);});
-            comments.removeAll(comments);
-        category.removeEvent(this); category = null;
+        comments.stream().forEach(a -> {
+            a.onRemoveEntity();
+            a.setCommented(null);
+        });
+        comments.removeAll(comments);
+        category.removeEvent(this);
+        category = null;
         initiator.removeEventInited(this);
         requesters.stream().forEach(a -> a.getRequester().removeEventRequest(this));
-            requesters.removeAll(requesters);
+        requesters.removeAll(requesters);
         compilations.stream().forEach(a -> a.removeEvent(this));
-            compilations.removeAll(compilations);
+        compilations.removeAll(compilations);
     }
 }

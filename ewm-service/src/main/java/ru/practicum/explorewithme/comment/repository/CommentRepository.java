@@ -6,12 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.practicum.explorewithme.comment.model.Comment;
 import ru.practicum.explorewithme.comment.model.StateComment;
-import ru.practicum.explorewithme.event.model.Event;
-import ru.practicum.explorewithme.event.model.StateEvent;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
@@ -41,7 +38,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
                                     @Param("rangeEnd") LocalDateTime rangeEnd,
                                     Pageable pg);
 
-    List<Comment> findByParentCommentIsNull(Pageable pg);  //Комментарии к событию
     List<Comment> findByParentCommentIsNullAndCommentedId(Long id, Pageable pg);  //Комментарии к событию
 
     List<Comment> findAllByParentCommentIdIn(@Param("ids") List<Long> ids);

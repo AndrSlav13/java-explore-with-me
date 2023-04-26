@@ -45,6 +45,6 @@ public class Category implements EntityInterfaces {
 
     public void onRemoveEntity() {
         events.stream().forEach(a -> a.setCategory(null));
-            events.removeAll(events);
+        events.removeAll(events);
     }
 }

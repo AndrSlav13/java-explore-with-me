@@ -34,8 +34,8 @@ public class User implements EntityInterfaces {
     @ToString.Exclude
     @OneToMany(mappedBy = "initiator",
             cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
             })
     Set<Event> eventsInited = new HashSet<>();
 
@@ -43,8 +43,8 @@ public class User implements EntityInterfaces {
     @ToString.Exclude
     @OneToMany(mappedBy = "requester",
             cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
             },
             orphanRemoval = true)
     Set<Request> eventsRequested = new HashSet<>();
@@ -83,9 +83,9 @@ public class User implements EntityInterfaces {
 
     public void onRemoveEntity() {
         eventsRequested.stream().forEach(a -> removeEventRequest(a.getEvent()));
-            eventsRequested.removeAll(eventsRequested);
+        eventsRequested.removeAll(eventsRequested);
         eventsInited.stream().forEach(a -> a.setInitiator(null));
-            eventsInited.removeAll(eventsInited);
+        eventsInited.removeAll(eventsInited);
     }
 
 }

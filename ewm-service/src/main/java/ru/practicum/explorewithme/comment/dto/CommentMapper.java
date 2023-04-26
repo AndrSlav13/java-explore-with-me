@@ -7,7 +7,6 @@ import ru.practicum.explorewithme.event.dto.EventDTO;
 import ru.practicum.explorewithme.user.dto.UserDTO;
 import ru.practicum.explorewithme.user.model.User;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +28,7 @@ public interface CommentMapper {
     }
 
     static CommentDetailsDTO.CommentDetailsDto toCommentDetailsDto(CommentDetails commentDetails) {
-        if(commentDetails == null) return null;
+        if (commentDetails == null) return null;
         CommentDetailsDTO.CommentDetailsDto commentDetailsDto = CommentDetailsDTO.CommentDetailsDto.builder()
                 .stateComment(commentDetails.getStateComment().name())
                 .date(commentDetails.getDate().format(StatDTO.formatDateTime))
@@ -40,8 +39,8 @@ public interface CommentMapper {
     }
 
     static CommentDTO.Controller.CommentAdminDto toCommentAdminDto(Comment comment, Optional<CommentDetails> commentDetails,
-                                                              UserDTO.Controller.UserShortDto userDto,
-                                                              EventDTO.Controller.EventForCommentDto eventDto) {
+                                                                   UserDTO.Controller.UserShortDto userDto,
+                                                                   EventDTO.Controller.EventForCommentDto eventDto) {
         CommentDetailsDTO.CommentDetailsDto commentDetailsDto = commentDetails.isPresent() ? CommentMapper.toCommentDetailsDto(commentDetails.get()) : null;
         CommentDTO.Controller.CommentAdminDto item = CommentDTO.Controller.CommentAdminDto.builder()
                 .id(comment.getId())
