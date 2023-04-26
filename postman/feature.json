@@ -94,6 +94,8 @@
 							}
 						}
 					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true					},
 					"request": {
 						"method": "POST",
 						"header": [
@@ -534,6 +536,8 @@
 							}
 						}
 					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true					},
 					"request": {
 						"method": "POST",
 						"header": [
@@ -681,6 +685,8 @@
 							}
 						}
 					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true					},
 					"request": {
 						"method": "POST",
 						"header": [
@@ -836,7 +842,7 @@
 						}
 					],
 					"protocolProfileBehavior": {
-						"disableBodyPruning": false
+						"disableBodyPruning": true
 					},
 					"request": {
 						"method": "GET",
@@ -978,7 +984,7 @@
 						}
 					],
 					"protocolProfileBehavior": {
-						"disableBodyPruning": false
+						"disableBodyPruning": true
 					},
 					"request": {
 						"method": "GET",
@@ -1137,7 +1143,7 @@
 						}
 					],
 					"protocolProfileBehavior": {
-						"disableBodyPruning": false
+						"disableBodyPruning": true
 					},
 					"request": {
 						"method": "GET",
@@ -1285,7 +1291,7 @@
 						}
 					],
 					"protocolProfileBehavior": {
-						"disableBodyPruning": false					},
+						"disableBodyPruning": true					},
 					"request": {
 						"method": "GET",
 						"header": [
