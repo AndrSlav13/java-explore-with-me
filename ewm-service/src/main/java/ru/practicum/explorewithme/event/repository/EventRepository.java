@@ -31,7 +31,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                                @Param("rangeEnd") LocalDateTime rangeEnd,
                                Pageable pg);
 
-
     @Query("select e from Event as e " +
             "   left join Request as r on e.id = r.event.id " +
             "   left join Category as cat on e.category.id = cat.id " +

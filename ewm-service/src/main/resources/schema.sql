@@ -88,8 +88,6 @@ create table if not exists public.requests (
 );
 
 
-
-
 create table if not exists event_compilation (
         event_id int8 not null,
         compilation_id int8 not null,
@@ -97,4 +95,3 @@ create table if not exists event_compilation (
         constraint fk_event_compilation1 foreign key (compilation_id) references public.compilations on delete cascade,
         constraint fk_event_compilation2 foreign key (event_id) references public.events on delete cascade
 );
-
