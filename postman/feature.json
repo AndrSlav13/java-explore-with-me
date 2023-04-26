@@ -29,7 +29,8 @@
 									"        pm.collectionVariables.set(\"eid\", event.id);\r",
 									"        comment = rnd.getComment();\r",
 									"\r",
-									"        pm.collectionVariables.set('store', [event, user]);\r",
+									"        pm.collectionVariables.set('storeE', event);\r",
+									"        pm.collectionVariables.set('storeU', user);\r",
 									"    } catch(err) {\r",
 									"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
 									"    }\r",
@@ -71,8 +72,8 @@
 									"\r",
 									"const source = JSON.parse(pm.request.body.raw);\r",
 									"const target = pm.response.json();\r",
-									"const event = pm.collectionVariables.get('store')[0];\r",
-									"const user = pm.collectionVariables.get('store')[1];\r",
+									"const event = pm.collectionVariables.get('storeE');\r",
+									"const user = pm.collectionVariables.get('storeU');\r",
 									"\r",
 									"pm.test(\"Комментарий должен содержать поля: id, event, message, commenter, publishedOn, childComments\", function () {\r",
 									"pm.expect(target).to.have.property('id');\r",
@@ -1979,6 +1980,26 @@
 		},
 		{
 			"key": "comid",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "storeU",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "storeE",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "storeC1",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "storeC2",
 			"value": "",
 			"type": "string"
 		}
