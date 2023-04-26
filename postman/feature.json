@@ -1,4 +1,4 @@
-﻿{
+{
 	"info": {
 		"_postman_id": "ef0813d1-ea69-440b-a200-e320ba2f0264",
 		"name": "Tesis Jandex-Practicum Tests",
@@ -94,8 +94,6 @@
 							}
 						}
 					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true					},
 					"request": {
 						"method": "POST",
 						"header": [
@@ -536,8 +534,6 @@
 							}
 						}
 					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true					},
 					"request": {
 						"method": "POST",
 						"header": [
@@ -685,8 +681,6 @@
 							}
 						}
 					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true					},
 					"request": {
 						"method": "POST",
 						"header": [
@@ -1291,7 +1285,8 @@
 						}
 					],
 					"protocolProfileBehavior": {
-						"disableBodyPruning": true					},
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [
@@ -1363,15 +1358,14 @@
 									"            let comment3 = await api.addCommentToComment(user.id, comment2.id, rnd.getComment());\r",
 									"            let comment4 = await api.addCommentToComment(user.id, comment3.id, rnd.getComment());\r",
 									"            all = await api.getComment(user.id, event.id);\r",
-									"            all = JSON.parse(all);\r",
 									"            pm.collectionVariables.set('commentMessage', commentWithoutSubComments.message);\r",
 									"            pm.collectionVariables.set('comida', commentWithoutSubComments.id);\r",
 									"            pm.collectionVariables.set('eventTitle', event.title);\r",
 									"            pm.collectionVariables.set('userName', user.name);\r",
 									"            pm.collectionVariables.set('comment2Message', all[0].message);\r",
-									"            pm.collectionVariables.set('comidb', all[\"0\"][\"id\"]);\r",
-									"            pm.collectionVariables.set('comidba', all[\"0\"][\"childComments\"][\"0\"][\"id\"]);\r",
-									"            pm.collectionVariables.set('comidbb', all[\"0\"][\"childComments\"][\"1\"][\"id\"]);\r",
+									"            pm.collectionVariables.set('comidb', pm.response.json().all[0].id);\r",
+									"            pm.collectionVariables.set('comidba', pm.response.json().all[0].childComments[0].id);\r",
+									"            pm.collectionVariables.set('comidbb', pm.response.json().all[0].childComments[1].id);\r",
 									"            console.log(\"-------------------addCommentToEvent \" + all[0].id + \" \" + all + \"---------\");\r",
 									"        }, 1000);\r",
 									"        \r",
