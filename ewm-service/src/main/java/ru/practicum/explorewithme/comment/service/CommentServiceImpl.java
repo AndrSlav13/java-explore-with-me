@@ -205,11 +205,7 @@ public class CommentServiceImpl implements CommentService {
                 rangeStart == null ? null : LocalDateTime.parse(rangeStart, StatDTO.formatDateTime),
                 rangeEnd == null ? null : LocalDateTime.parse(rangeEnd, StatDTO.formatDateTime), pg);
         Map<Comment, List<Comment>> mapComments = comments.stream().collect(Collectors.toMap(
-                a -> {
-                    a = a;
-                    Comment f = a.getParentComment();
-                    return a.getParentComment() == null ? a : a.getParentComment();
-                },
+                a -> a.getParentComment() == null ? a : a.getParentComment(),
                 a -> a.getParentComment() == null ? List.of() : List.of(a),
                 (a, b) -> {
                     ArrayList<Comment> ar = new ArrayList(a);
