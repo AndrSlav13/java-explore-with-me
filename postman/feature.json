@@ -850,13 +850,19 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/events/comments",
+							"raw": "{{baseUrl}}/events/comments?eventId={{eid}}",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"events",
 								"comments"
+							],
+							"query": [
+								{
+									"key": "eventId",
+									"value": "{{eid}}"
+								}
 							]
 						},
 						"description": "Обратите внимание: дата и время на которые намечено событие не может быть раньше, чем через два часа от текущего момента"
@@ -885,8 +891,9 @@
 									"\r",
 									"        setTimeout(async () => {\r",
 									"        comment = await api.addCommentToEvent(user.id, event.id, rnd.getComment());\r",
-									"        comment = await api.addCommentToComment(user.id, comment.id, rnd.getComment());\r",
-									"        comment = await api.addCommentToComment(user.id, comment.id, rnd.getComment());\r",
+									"        let comment2 = await api.addCommentToComment(user.id, comment.id, rnd.getComment());\r",
+									"        let comment3 = await api.addCommentToComment(user.id, comment2.id, rnd.getComment());\r",
+									"        pm.collectionVariables.set('aaa', comment3);\r",
 									"        }, 1000);\r",
 									"    } catch(err) {\r",
 									"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
@@ -1820,7 +1827,7 @@
 					"",
 					"    getCategory() {",
 					"        return {",
-					"            name: pm.variables.replaceIn('{{$randomWord}}') + Math.floor(Math.random() * 100).toString()",
+					"            name: pm.variables.replaceIn('{{$randomWord}}') + Math.floor(Math.random() * 1000).toString()",
 					"        };",
 					"    }",
 					"",
