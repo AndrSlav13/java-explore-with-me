@@ -1,4 +1,4 @@
-[pool request for rewiever]()
+[pool request for rewiever](https://github.com/AndrSlav13/java-explore-with-me/pull/9)
 # Дипломная работа по курсу "Java-разработчик"
 ### Яндекс Практикум: проект "Explore With Me"
 ### Технологии: Java + Spring Boot + Maven + Lombok + JUnit + RESTful API + PostgreSQL + Docker +    ORM (HIBERNATE)
