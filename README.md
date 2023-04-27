@@ -1,3 +1,4 @@
+[pool request for rewiever]()
 # Дипломная работа по курсу "Java-разработчик"
 ### Яндекс Практикум: проект "Explore With Me"
 ### Технологии: Java + Spring Boot + Maven + Lombok + JUnit + RESTful API + PostgreSQL + Docker +    ORM (HIBERNATE)
