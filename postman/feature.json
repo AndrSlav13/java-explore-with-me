@@ -890,7 +890,7 @@
 									"        pm.collectionVariables.set('store', [event, user, comment]);\r",
 									"\r",
 									"\r",
-									"            new Promise(function(resolve, reject) {\r",
+									"            return new Promise(function(resolve, reject) {\r",
 									"\r",
 									"            setTimeout(() => resolve(1), 1000); // (*)\r",
 									"\r",
