@@ -30,22 +30,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                                @Param("rangeStart") LocalDateTime rangeStart,
                                @Param("rangeEnd") LocalDateTime rangeEnd,
                                Pageable pg);
-/*
-    @Query(value = "select e.ev " +
-            "   from (select d as ev, " +
-            "           max(r.status), count(d.id) from events as d " +
-            "   join requests as r on d.id = r.event_id " +
-            "   join categories as cat on d.category_id = cat.id " +
-            "where (:onlyAvailable = true AND r.status = 'CONFIRMED' OR :onlyAvailable = false ) AND " +
-            "('%' || :text || '%' LIKE d.annotation OR '%' || :text || '%' LIKE d.description) AND " +
-            "cat_name in :categories AND " +
-            "(:paid = true OR d.paid = :paid) AND " +
-            "d.event_date >= :rangeStart AND d.event_date <= :rangeEnd " +
-            "   group by d.id, r.status " +
-            "having count(*) < max(d.participant_limit) " +
-            "   ) as e ", nativeQuery = true)
-
- */
 
     @Query("select e from Event as e " +
             "   left join Request as r on e.id = r.event.id " +

@@ -2,8 +2,11 @@ package ru.practicum.explorewithme.event.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.explorewithme.EntityInterfaces;
 import ru.practicum.explorewithme.category.model.Category;
+import ru.practicum.explorewithme.comment.model.Comment;
 import ru.practicum.explorewithme.compilation.model.Compilation;
+import ru.practicum.explorewithme.exceptions.ApiErrorException;
 import ru.practicum.explorewithme.request.model.Request;
 import ru.practicum.explorewithme.user.model.User;
 
@@ -22,7 +25,7 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "events", schema = "public")
-public class Event {
+public class Event implements EntityInterfaces {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
@@ -47,7 +50,11 @@ public class Event {
     Boolean requestModeration;
 
     @Access(AccessType.PROPERTY)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     @JoinColumn(name = "category_id")
     public Category getCategory() {
         return this.category;
@@ -63,26 +70,59 @@ public class Event {
     @Builder.Default
     @ToString.Exclude
     @OneToMany(mappedBy = "event",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },
+            orphanRemoval = true)   //Удаление индексов в таблице смежности (?)
     Set<Request> requesters = new HashSet<>();
 
     @Builder.Default
     @ToString.Exclude
-    @ManyToMany(cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-    })
-    @JoinTable(
-            name = "event_compilation",
-            joinColumns = @JoinColumn(name = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "compilation_id")
-    )
+    @OneToMany(mappedBy = "commented",
+            orphanRemoval = true,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    Set<Comment> comments = new HashSet<>();
+
+    @Builder.Default
+    @ToString.Exclude
+    @ManyToMany(mappedBy = "events")
     Set<Compilation> compilations = new HashSet<>();
 
     public void setCategory(Category category) {
-        if (category != null) category.removeEvent(this);
+        if (this.category != null) this.category.removeEvent(this);
         this.category = category;
         category.addEvent(this);
+    }
+
+    public void addComment(Comment comment) {
+        if (comment == null)
+            throw new ApiErrorException(409, "comment isn't added", "comment object is null");
+        comment.setCommented(this);
+        comments.add(comment);
+    }
+
+    public void removeComment(Comment comment) {
+        comment.setCommented(null);
+        comments.remove(comment);
+    }
+
+    //Чтобы обеспечить разрыв связи сущностей и orphanRemoval при необходимости
+    public void onRemoveEntity() {
+        comments.stream().forEach(a -> {
+            a.onRemoveEntity();
+            a.setCommented(null);
+        });
+        comments.removeAll(comments);
+        category.removeEvent(this);
+        category = null;
+        initiator.removeEventInited(this);
+        requesters.stream().forEach(a -> a.getRequester().removeEventRequest(this));
+        requesters.removeAll(requesters);
+        compilations.stream().forEach(a -> a.removeEvent(this));
+        compilations.removeAll(compilations);
     }
 }

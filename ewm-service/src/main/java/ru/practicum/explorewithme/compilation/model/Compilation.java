@@ -2,6 +2,7 @@ package ru.practicum.explorewithme.compilation.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.explorewithme.EntityInterfaces;
 import ru.practicum.explorewithme.event.model.Event;
 
 import javax.persistence.*;
@@ -18,7 +19,7 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "compilations", schema = "public")
-public class Compilation {
+public class Compilation implements EntityInterfaces {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
@@ -28,7 +29,15 @@ public class Compilation {
     Boolean pinned;
     @Builder.Default
     @ToString.Exclude
-    @ManyToMany(mappedBy = "compilations")
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(
+            name = "event_compilation",
+            joinColumns = @JoinColumn(name = "compilation_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id")
+    )
     Set<Event> events = new HashSet<>();
 
     public void addEvent(Event event) {
@@ -41,10 +50,8 @@ public class Compilation {
         events.remove(event);
     }
 
-    public void removeEvents() {
-        events.stream().forEach(a -> {
-            events.remove(a);
-            a.getCompilations().remove(a);
-        });
+    public void onRemoveEntity() {
+        events.stream().forEach(a -> a.getCompilations().remove(a));
+        events.removeAll(events);
     }
 }

@@ -70,6 +70,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void delete(Long id) {
+        User user = findUserById(id);
+        user.onRemoveEntity();
         userRepository.deleteById(id);
     }
 
@@ -80,8 +82,8 @@ public class UserServiceImpl implements UserService {
         Event event = eventRepository.findById(eventId).get();
         Request request = new Request(event, user);
         if (!reuestModeration) request.setStatus(StatusEventParticipation.CONFIRMED);
+        user.addEventRequest(event, request);
         requestRepository.save(request);
         return RequestMapper.toParticipationRequestDto(request);
-        //return userRepository.save(userId, eventId);
     }
 }

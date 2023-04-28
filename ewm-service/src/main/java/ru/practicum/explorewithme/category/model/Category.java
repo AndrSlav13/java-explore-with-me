@@ -2,6 +2,7 @@ package ru.practicum.explorewithme.category.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.explorewithme.EntityInterfaces;
 import ru.practicum.explorewithme.event.model.Event;
 
 import javax.persistence.*;
@@ -18,7 +19,7 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "categories", schema = "public")
-public class Category {
+public class Category implements EntityInterfaces {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
@@ -27,7 +28,7 @@ public class Category {
     String name;
     @Builder.Default
     @ToString.Exclude
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category")   //Добавление связи со стороны event
     Set<Event> events = new HashSet<>();
 
     public void addEvent(Event event) {
@@ -40,5 +41,10 @@ public class Category {
 
     public Boolean isAttachedToEvents() {
         return !events.isEmpty();
+    }
+
+    public void onRemoveEntity() {
+        events.stream().forEach(a -> a.setCategory(null));
+        events.removeAll(events);
     }
 }
